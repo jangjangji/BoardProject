@@ -17,17 +17,21 @@ header .site-top > .inner {
     height: 35px;
     align-items: center;
 }
-header .site-top i{
+
+header .site-top i {
     font-size: 1.3rem;
     vertical-align: middle;
 }
-header .site-top a{
+
+header .site-top a {
     line-height: 1;
 }
-header .site-top a:hover{
+
+header .site-top a:hover {
     text-decoration: underline;
 }
-header .site-top .right a{
+
+header .site-top .right a {
     margin-left: 10px;
 }
 
@@ -66,4 +70,33 @@ header .search-box button i {
     color: #fff;
     font-size: 1.5rem;
 }
+
+nav {
+    background: #000;
+}
+
+nav > .inner {
+    display: flex;
+    height: 45px;
+}
+
+nav > .inner a {
+    font-size: 1.35rem;
+    color: #fff;
+    padding: 0 25px;
+    line-height: 45px;
+}
+
+nav > .inner a:hover {
+    background: #414141;
+}
 /* 사이트 헤더 영역 E */
+
+/* 사이트 푸터 영역 S */
+footer {
+    margin-top: 100px;
+    min-height: 250px;
+    background: #f8f8f8;
+    border-top: 1px solid #ccc;
+}
+/* 사이트 푸터 영역 E */

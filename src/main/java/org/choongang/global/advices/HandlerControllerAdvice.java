@@ -2,6 +2,7 @@ package org.choongang.global.advices;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.choongang.global.Interceptor;
 import org.choongang.global.config.annotations.*;
 import org.choongang.global.config.containers.BeanContainer;
 
@@ -16,14 +17,15 @@ public class HandlerControllerAdvice {
 
     private final HttpServletRequest request;
 
-    public void handle(Object controller) {
+    public boolean handle(Object controller) {
         Class clazz = controller.getClass();
         String pkName = clazz.getPackageName();
 
         boolean isRest = Arrays.stream(clazz.getAnnotations()).anyMatch(a -> a instanceof RestController);
         List<Object> advices = getControllerAdvices(isRest);
         Object matchedAdvice = null;
-        first: for (Object advice : advices) {
+        first:
+        for (Object advice : advices) {
             Annotation[] annotations = advice.getClass().getAnnotations();
             for (Annotation annotation : annotations) {
                 if (annotation instanceof ControllerAdvice anno) {
@@ -35,11 +37,15 @@ public class HandlerControllerAdvice {
                 }
             }
         }
-
+        boolean isContinue = true;
         // 매칭된
         if (matchedAdvice != null) {
+            if (matchedAdvice instanceof Interceptor intercepter) {
+                isContinue = intercepter.preHandle();
+            }
+
             Method[] methods = matchedAdvice.getClass().getDeclaredMethods();
-            for(Method method : methods) {
+            for (Method method : methods) {
                 for (Annotation anno : method.getDeclaredAnnotations()) {
                     // 공통 유지할 속성 처리 S
                     if (anno instanceof ModelAttribute ma) {
@@ -54,8 +60,9 @@ public class HandlerControllerAdvice {
                     // 공통 유지할 속성 처리 E
                 } // endfor
             } // endfor
-        }
+        }return isContinue;
     }
+
 
     public List<Object> getControllerAdvices(boolean isRest) {
 

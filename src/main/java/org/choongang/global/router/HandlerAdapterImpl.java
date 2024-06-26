@@ -162,8 +162,10 @@ public class HandlerAdapterImpl implements HandlerAdapter {
         /* 요청 메서드 호출 S */
 
         // controller 적용 범위  Advice 처리
-        handlerControllerAdvice.handle(controller);
-
+        boolean isContinue = handlerControllerAdvice.handle(controller);
+        if(!isContinue){
+            return;
+        }
         Object result = method.invoke(controller, args.toArray());
 
         /**

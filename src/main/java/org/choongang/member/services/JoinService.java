@@ -16,22 +16,25 @@ import org.mindrot.jbcrypt.BCrypt;
 public class JoinService {
     private final JoinValidator validator;
     private final MemberMapper mapper;
-    public void process(RequestJoin form){
+
+    public void process(RequestJoin form) {
         validator.check(form);
 
-        //비밀번호 해시화
+
+        // 비밀번호 해시화
         String hash = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt(12));
 
-        //DB에 영구 저장 처리
+        // DB에 영구 저장 처리
         Member member = Member.builder()
                 .email(form.getEmail())
                 .password(hash)
                 .userName(form.getUserName())
                 .userType(UserType.USER)
                 .build();
+
         int result = mapper.register(member);
-        if(result <1){
-            throw new AlertException("회원가입에 실패", HttpServletResponse.SC_BAD_REQUEST);
+        if (result < 1) {
+            throw new AlertException("회원가입에 실패하였습니다.", HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }
